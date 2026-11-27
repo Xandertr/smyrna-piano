@@ -1,0 +1,476 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Smyrna Piano Service</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+/* VOICE: calm, trustworthy local craftsman — plain words, upfront prices.
+   IDEA: the piano keyboard itself — black and white keys run through every page.
+   PICTURE: full-width keyboard bands; the tuning calendar is one octave, a key per month.
+   COLOUR and TYPE: ebony and ivory with hammer-felt red; Archivo headings, Inter body.
+   LAYOUT: one site, five views by hash; content to 1200px, dark bands full width. */
+:root{color-scheme:light dark;
+--bg:light-dark(#FAFAF8,#111113);--ink:light-dark(#141414,#EDEDE8);--muted:light-dark(#55565B,#A9A9A4);
+--card:light-dark(#FFFFFF,#1B1B1E);--line:light-dark(#E4E4DF,#2E2E33);--soft:light-dark(#F0F0EC,#17171A);
+--accent:light-dark(#A3262A,#E0575B);--accent-ink:light-dark(#FFFFFF,#141414);--tint:light-dark(#FBF1F1,#2A1A1B);
+--band:light-dark(#141414,#09090A);--field:light-dark(#BDBDB6,#45454B)}
+:root[data-theme=light]{color-scheme:light}:root[data-theme=dark]{color-scheme:dark}
+*{box-sizing:border-box;min-width:0}
+html{scroll-padding-top:24px}
+body{margin:0;background:var(--bg);color:var(--ink);font:17px/1.55 Inter,system-ui,sans-serif;overflow-x:clip}
+h1,h2,h3,.brand{font-family:Archivo,system-ui,sans-serif;margin:0;text-wrap:balance}
+h1{font-weight:800;font-size:clamp(38px,5.6vw,72px);line-height:1.03;letter-spacing:-.03em}
+h2{font-weight:800;font-size:clamp(30px,3.6vw,44px);line-height:1.08;letter-spacing:-.02em}
+h3{font-weight:700;font-size:20px;line-height:1.25}
+p{margin:0}
+a{color:var(--accent)}
+.wrap{max-width:1200px;margin:0 auto;padding-inline:max(24px,4vw)}
+@media(min-width:1300px){.wrap{padding-inline:24px}}
+.muted{color:var(--muted)}
+.eyebrow{font-size:15px;font-weight:600;color:var(--accent);margin-bottom:16px}
+.lead{font-size:20px;color:var(--muted);max-width:640px;margin-top:24px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:28px}
+.grid{display:grid;gap:20px;grid-template-columns:repeat(auto-fit,minmax(min(100%,280px),1fr))}
+.btn{display:inline-flex;align-items:center;justify-content:center;min-height:48px;padding:12px 26px;border-radius:6px;font-weight:600;text-decoration:none;border:1.5px solid transparent;cursor:pointer;font:600 17px Inter,sans-serif}
+.btn.primary{background:var(--accent);color:var(--accent-ink)}
+.btn.primary:hover{filter:brightness(.92)}
+.btn.ghost{border-color:currentColor;color:var(--ink);background:transparent}
+.btn:focus-visible,a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+.row{display:flex;flex-wrap:wrap;gap:14px}
+section{padding-block:clamp(56px,8vw,104px)}
+.band{background:var(--band);color:#ECECE8}
+.band h2{color:#FFFFFF}.band .muted{color:#C3C3BE}
+.band a:not(.btn){color:#FFFFFF}
+.soft{background:var(--soft);border-block:1px solid var(--line)}
+.price{font-weight:600;color:var(--accent);white-space:nowrap;font-size:15px}
+/* header */
+header{border-bottom:1px solid var(--line);background:var(--bg);position:sticky;top:0;z-index:5}
+.bar{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:12px 24px;padding-block:14px}
+.brand{display:flex;align-items:center;gap:12px;text-decoration:none;color:var(--ink);font-weight:800;font-size:20px;letter-spacing:-.01em}
+nav{display:flex;flex-wrap:wrap;align-items:center;gap:4px 22px;font-size:15px;font-weight:500}
+nav a{color:var(--ink);text-decoration:none;padding:10px 0;min-height:44px;display:inline-flex;align-items:center}
+nav a[aria-current=page]{text-decoration:underline;text-decoration-thickness:2px;text-underline-offset:7px;text-decoration-color:var(--accent);font-weight:600}
+nav a.btn{padding:10px 18px;color:var(--accent-ink)}
+@media(max-width:600px){nav{width:100%;justify-content:space-between}nav a.btn{width:100%}}
+/* keyboard */
+.keys{display:block;width:100%}
+.view{display:none}.view.on{display:block}
+/* hero */
+.hero{display:flex;flex-wrap:wrap;gap:48px;align-items:flex-end;padding-top:clamp(48px,7vw,88px)}
+.hero>div:first-child{flex:1 1 520px}
+.call{flex:1 1 300px;display:flex;flex-direction:column;gap:12px}
+.call .num{font-family:Archivo,sans-serif;font-weight:800;font-size:30px;white-space:nowrap}
+.split{display:flex;flex-wrap:wrap;gap:48px}
+.split>*:first-child{flex:1 1 340px}.split>*:last-child{flex:2 1 520px}
+.steps{display:grid;gap:32px;grid-template-columns:repeat(auto-fit,minmax(min(100%,220px),1fr))}
+.steps div{border-top:3px solid var(--ink);padding-top:18px}
+.steps b{display:block;font-family:Archivo,sans-serif;color:var(--accent);font-size:15px;margin-bottom:6px}
+.faq details{border-top:1px solid var(--line);padding:6px 0}
+.faq summary{cursor:pointer;font-family:Archivo,sans-serif;font-weight:700;font-size:19px;padding:16px 0;min-height:44px;list-style-position:outside}
+.faq details p{padding:0 0 18px;color:var(--muted);max-width:720px}
+/* table */
+.scroll{overflow-x:auto}
+table{width:100%;border-collapse:collapse;font-size:16px;min-width:620px}
+th,td{padding:20px 24px;text-align:left;vertical-align:top;border-bottom:1px solid var(--line)}
+thead th{font-family:Archivo,sans-serif;font-size:15px;border-bottom:2px solid var(--ink)}
+tbody th{font-family:Archivo,sans-serif;font-size:18px;width:24%}
+.num-col{text-align:right;white-space:nowrap}
+/* month keyboard */
+.octave{position:relative;height:240px;background:#141414;border-top:6px solid var(--accent);border-radius:0 0 10px 10px;padding:4px 2px 2px}
+.whites{display:flex;gap:3px;height:100%}
+.wk{flex:1 1 0;border-radius:0 0 6px 6px;display:flex;align-items:flex-end;justify-content:center;padding-bottom:14px;font-weight:600;font-size:15px}
+.bk{position:absolute;top:4px;width:9%;height:60%;border-radius:0 0 5px 5px;display:flex;align-items:flex-end;justify-content:center;padding-bottom:10px;color:#fff;font-weight:600;font-size:13px;box-shadow:0 2px 0 rgba(0,0,0,.35)}
+.legend{display:flex;flex-wrap:wrap;gap:12px 28px;margin-top:22px;font-size:15px;color:var(--muted)}
+.legend span{display:flex;align-items:center;gap:8px}.legend i{width:16px;height:16px;border-radius:4px;display:inline-block;border:1px solid var(--line)}
+.checks{list-style:none;margin:0;padding:0;display:grid;gap:14px;grid-template-columns:repeat(auto-fit,minmax(min(100%,240px),1fr))}
+.checks li{display:flex;gap:12px;align-items:flex-start;font-size:16px;padding:16px 18px}
+/* form */
+form{display:flex;flex-direction:column;gap:32px}
+fieldset{border:0;margin:0;padding:0}
+legend{font-family:Archivo,sans-serif;font-weight:700;font-size:20px;margin-bottom:14px}
+.opts{display:grid;gap:12px;grid-template-columns:repeat(auto-fit,minmax(min(100%,200px),1fr))}
+.opt{text-align:left;padding:14px 18px;border-radius:8px;border:2px solid var(--line);background:var(--card);color:var(--ink);cursor:pointer;min-height:68px;display:flex;flex-direction:column;gap:2px;font:inherit}
+.opt[aria-pressed=true]{border-color:var(--accent);background:var(--tint)}
+.opt small{color:var(--muted);font-size:14px}
+.chips{display:flex;flex-wrap:wrap;gap:10px}
+.chip{padding:10px 18px;border-radius:999px;border:2px solid var(--line);background:var(--card);color:var(--ink);font:600 15px Inter,sans-serif;cursor:pointer;min-height:44px}
+.chip[aria-pressed=true]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.fields{display:grid;gap:16px;grid-template-columns:repeat(auto-fit,minmax(min(100%,220px),1fr))}
+label{display:flex;flex-direction:column;gap:6px;font-size:14px;font-weight:600}
+input,select,textarea{font:16px Inter,sans-serif;padding:12px;border:1px solid var(--field);border-radius:6px;min-height:48px;background:var(--card);color:var(--ink)}
+textarea{resize:vertical}
+.full{grid-column:1/-1}
+.err{color:var(--accent);font-size:14px;font-weight:600;min-height:20px}
+input[aria-invalid=true]{border-color:var(--accent);border-width:2px}
+.thanks{display:flex;flex-direction:column;gap:16px;align-items:flex-start;padding:40px}
+footer{background:var(--band);color:#B4B4AF;font-size:15px}
+footer .wrap{display:flex;flex-wrap:wrap;justify-content:space-between;gap:32px;padding-block:52px}
+footer a{color:#fff;text-decoration:none;display:block;padding:4px 0}
+footer b{color:#fff}
+.demo{font-size:13px;color:#9A9A95;border-top:1px solid #2A2A2E;padding-block:14px}
+@media (prefers-reduced-motion:no-preference){.view.on{animation:in .25s ease}@keyframes in{from{opacity:0;transform:translateY(6px)}}}
+</style>
+</head>
+<body>
+<header>
+<div class="wrap bar">
+<a class="brand" href="#home" aria-label="Smyrna Piano Service, home">
+<svg width="36" height="36" viewBox="0 0 36 36" aria-hidden="true"><rect x="1" y="1" width="34" height="34" rx="6" fill="#141414" stroke="#fff" stroke-opacity=".15"/><rect x="7" y="7" width="6" height="22" fill="#FAFAF8"/><rect x="15" y="7" width="6" height="22" fill="#FAFAF8"/><rect x="23" y="7" width="6" height="22" fill="#FAFAF8"/><rect x="11" y="7" width="4" height="13" fill="#141414"/><rect x="20" y="7" width="4" height="13" fill="#141414"/></svg>
+Smyrna Piano Service</a>
+<nav aria-label="Main">
+<a href="#home">Home</a><a href="#services">Services</a><a href="#about">About</a><a href="#care">Piano care</a>
+<a class="btn primary" href="#book">Book a tuning</a>
+</nav>
+</div>
+</header>
+
+<main>
+<!-- HOME -->
+<div class="view" id="v-home">
+<div class="wrap">
+<div class="hero">
+<div>
+<p class="eyebrow">Washington DC · Maryland · Northern Virginia</p>
+<h1>Your piano, back in tune. At home, on your schedule.</h1>
+<p class="lead">Professional piano tuning, pitch correction and minor repairs for homes, schools, churches and studios across the DMV. We come to you.</p>
+<div class="row" style="margin-top:32px"><a class="btn primary" href="#book">Request an appointment</a><a class="btn ghost" href="#services">See services &amp; pricing</a></div>
+</div>
+<div class="card call">
+<h3>Call or text</h3>
+<p class="num">(571) 555-0148</p>
+<p class="muted" style="font-size:15px">book@smyrnapiano.com</p>
+<p style="border-top:1px solid var(--line);padding-top:12px;display:flex;justify-content:space-between;gap:12px;font-size:15px"><span class="muted">Mon–Sat, 9am–6pm</span><b>Tuning from $165</b></p>
+</div>
+</div>
+<div class="keys" data-keys="150" style="margin-top:64px"></div>
+</div>
+<section class="wrap">
+<div class="row" style="justify-content:space-between;align-items:flex-end;gap:20px;margin-bottom:40px">
+<div style="max-width:640px"><h2>Services</h2><p class="muted" style="margin-top:12px">Upright, spinet, console, baby grand or concert grand — every visit starts with an inspection so you know exactly what your piano needs before any work begins.</p></div>
+<a href="#services" style="font-weight:600">Full price list →</a>
+</div>
+<div class="grid" id="home-services"></div>
+</section>
+<div class="band"><section class="wrap split">
+<h2>DMV weather is hard on pianos.</h2>
+<div style="display:flex;flex-direction:column;gap:18px;font-size:18px">
+<p class="muted">Humid summers swell a piano's wooden soundboard; dry, heated winters shrink it. Those seasonal swings pull the strings off pitch — even if nobody is playing.</p>
+<p class="muted">Most pianos in the region stay sounding their best with a tuning once or twice a year, ideally a few weeks after the heat or air conditioning settles in for the season.</p>
+<a href="#care" style="font-weight:600">Read the piano care guide →</a>
+</div>
+</section></div>
+<section class="wrap">
+<h2 style="margin-bottom:40px">How it works</h2>
+<div class="steps" id="home-steps"></div>
+</section>
+<section class="wrap" style="padding-top:0">
+<div class="card split" style="padding:clamp(28px,4vw,48px)">
+<div><h2 style="margin-bottom:12px">Service area</h2><p class="muted">Based in Fairfax County, Virginia. No travel fee within 25 miles. Not sure if we reach you? Send your ZIP code and we'll let you know.</p></div>
+<div class="grid" id="home-areas" style="grid-template-columns:repeat(auto-fit,minmax(min(100%,180px),1fr));gap:28px"></div>
+</div>
+</section>
+<section class="wrap faq" style="padding-top:0;max-width:900px">
+<h2 style="margin-bottom:24px">Questions</h2>
+<div id="home-faq"></div>
+</section>
+</div>
+
+<!-- SERVICES -->
+<div class="view" id="v-services">
+<section class="wrap" style="padding-bottom:56px">
+<p class="eyebrow">Services &amp; pricing</p>
+<h1>Clear prices, quoted before any work begins.</h1>
+<p class="lead">Every visit starts with a quick inspection. If your piano needs more than you booked, we explain why and give you a price first — you decide.</p>
+<div class="keys" data-keys="150" style="margin-top:56px"></div>
+</section>
+<section class="wrap" style="padding-top:0">
+<div class="card scroll" style="padding:0">
+<table>
+<thead><tr><th scope="col">Service</th><th scope="col">What's included</th><th scope="col" class="num-col">Price</th><th scope="col" class="num-col">Time</th></tr></thead>
+<tbody id="svc-rows"></tbody>
+</table>
+</div>
+<p class="muted" style="font-size:14px;margin-top:14px">Parts are billed at cost. Prices are for one piano at one address.</p>
+</section>
+<section class="wrap" style="padding-top:0">
+<h2 style="margin-bottom:32px">Pianos we work on</h2>
+<div class="grid" id="svc-kinds"></div>
+</section>
+<div class="soft"><section class="wrap">
+<h2 style="margin-bottom:36px">Visit policies</h2>
+<div class="grid" id="svc-policies" style="gap:36px"></div>
+</section></div>
+</div>
+
+<!-- ABOUT -->
+<div class="view" id="v-about">
+<section class="wrap" style="padding-bottom:56px">
+<p class="eyebrow">About</p>
+<h1>A small, independent piano service based in Fairfax County.</h1>
+<p class="lead">We tune and care for pianos across Washington DC, Maryland and Northern Virginia — one home, school or church at a time.</p>
+<div class="keys" data-keys="150" style="margin-top:56px"></div>
+</section>
+<section class="wrap split" style="padding-top:0;align-items:stretch">
+<div class="band" style="border-radius:12px;padding:clamp(28px,4vw,48px);display:flex;flex-direction:column;justify-content:space-between;gap:36px">
+<svg viewBox="0 0 200 120" style="width:100%;max-width:320px" role="img" aria-label="Twelve steps of an octave" id="steps-svg"></svg>
+<div><h3 style="font-size:28px;color:#fff;margin-bottom:10px">Why “Smyrna”?</h3>
+<p class="muted">Smyrna is the ancient name of İzmir, a port city on Turkey's Aegean coast with a long love of music. We borrowed it as a reminder of where good sound starts: patience, care and a well-tuned instrument.</p></div>
+</div>
+<div style="display:flex;flex-direction:column;gap:18px;font-size:18px">
+<h2>How we work</h2>
+<p>A piano is often the most valuable — and most personal — thing in a room. We treat it that way, and we treat your home the same: shoe covers on, a drop cloth down, and everything put back as we found it.</p>
+<p>We tune by ear, checked with an electronic tuning device, and take the time to set each string so the tuning holds through the season instead of drifting in a few weeks.</p>
+<p>If a piano isn't worth the cost of a repair, we'll say so. Honest advice is part of the service.</p>
+</div>
+</section>
+<div class="soft"><section class="wrap">
+<h2 style="margin-bottom:36px">What you can count on</h2>
+<div class="grid" id="about-values"></div>
+</section></div>
+<section class="wrap split">
+<div><h2>What happens at a visit</h2><p class="muted" style="margin-top:12px">Plan for about an hour and a half for a standard tuning.</p></div>
+<ol id="about-visit" style="margin:0;padding:0;list-style:none"></ol>
+</section>
+</div>
+
+<!-- CARE -->
+<div class="view" id="v-care">
+<section class="wrap" style="padding-bottom:56px">
+<p class="eyebrow">Piano care guide</p>
+<h1>Keep your piano healthy between tunings.</h1>
+<p class="lead">A few simple habits make tunings last longer and keep small problems from turning into expensive ones.</p>
+<div class="keys" data-keys="150" style="margin-top:56px"></div>
+</section>
+<section class="wrap" style="padding-top:0">
+<div class="card" style="padding:clamp(24px,4vw,40px)">
+<h2 style="font-size:32px;margin-bottom:8px">When to tune in the DMV</h2>
+<p class="muted" style="margin-bottom:28px">Tune after the season settles, not right as it changes. One key per month.</p>
+<div class="octave" id="octave" role="img" aria-label="One octave of piano keys, one key per month. Best months to tune: April, May, October and November."></div>
+<div class="legend"><span><i style="background:var(--accent)"></i>Best time to tune</span><span><i style="background:#CFCFC8"></i>Humidity changing</span><span><i style="background:#FFFFFF"></i>Stable season</span></div>
+</div>
+</section>
+<section class="wrap" style="padding-top:0">
+<div class="grid" id="care-tips" style="grid-template-columns:repeat(auto-fit,minmax(min(100%,320px),1fr))"></div>
+</section>
+<div class="soft"><section class="wrap split">
+<div><h2>Signs it's time to call</h2><p class="muted" style="margin-top:12px">Any of these is worth a visit, even if your last tuning was recent.</p></div>
+<ul class="checks" id="care-signs"></ul>
+</section></div>
+</div>
+
+<!-- BOOK -->
+<div class="view" id="v-book">
+<div class="keys" data-keys="110"></div>
+<section class="wrap split" style="align-items:flex-start">
+<div>
+<h1 style="font-size:clamp(38px,5vw,56px)">Book a tuning</h1>
+<p class="lead" style="font-size:18px;margin-bottom:28px">Pick a service and tell us when works. We'll confirm a time and price within one business day.</p>
+<div class="card" style="display:flex;flex-direction:column;gap:8px;padding:24px">
+<b>Rather talk to someone?</b>
+<p class="num" style="font-family:Archivo,sans-serif;font-weight:800;font-size:26px;white-space:nowrap">(571) 555-0148</p>
+<p class="muted" style="font-size:15px">book@smyrnapiano.com<br>Mon–Sat, 9am–6pm</p>
+</div>
+</div>
+<div>
+<form class="card" id="book-form" novalidate style="border-radius:12px;padding:clamp(22px,3.5vw,36px)">
+<fieldset><legend>1. What do you need?</legend><div class="opts" id="opt-svc"></div></fieldset>
+<fieldset><legend>2. About your piano</legend>
+<div class="fields">
+<label>Type of piano<select id="f-piano"><option>Upright / console / spinet</option><option>Baby grand or grand</option><option>Not sure</option></select></label>
+<label>Last tuned<select id="f-last"><option>Within the last year</option><option>1–3 years ago</option><option>More than 3 years ago</option><option>Don't know</option></select></label>
+<label class="full">Anything we should know? (optional)<textarea id="f-notes" rows="3" placeholder="Sticky keys, recent move, upcoming recital…"></textarea></label>
+</div></fieldset>
+<fieldset><legend>3. When works for you?</legend><div class="chips" id="opt-times"></div></fieldset>
+<fieldset><legend>4. Your details</legend>
+<div class="fields">
+<label>Name<input id="f-name" autocomplete="name"></label>
+<label>Phone<input id="f-phone" type="tel" autocomplete="tel"></label>
+<label>Email<input id="f-email" type="email" autocomplete="email"></label>
+<label>ZIP code<input id="f-zip" inputmode="numeric" autocomplete="postal-code" maxlength="5"></label>
+</div></fieldset>
+<p class="err" id="f-err" role="alert"></p>
+<div class="row" style="align-items:center;border-top:1px solid var(--line);padding-top:22px;gap:20px">
+<button class="btn primary" type="submit">Send request</button>
+<p class="muted" style="font-size:15px">Selected: <b style="color:var(--ink)" id="sel-name"></b> · <span id="sel-price"></span></p>
+</div>
+</form>
+<div class="card thanks" id="book-thanks" hidden style="border-radius:12px">
+<svg width="56" height="56" viewBox="0 0 56 56" aria-hidden="true"><circle cx="28" cy="28" r="26" fill="var(--accent)"/><path d="M17 29l7 7 15-15" fill="none" stroke="#fff" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+<h2 tabindex="-1" id="thanks-title">Thanks — that's everything we need.</h2>
+<p class="muted" style="font-size:18px" id="thanks-text"></p>
+<p class="muted" style="font-size:13px">Demo site: this form isn't connected to anything, so no request was actually sent.</p>
+<div class="row" style="margin-top:6px"><a class="btn primary" href="#care">Read the care guide</a><button class="btn ghost" type="button" id="again">Book another piano</button></div>
+</div>
+</div>
+</section>
+</div>
+</main>
+
+<div class="band" id="cta"><section class="wrap row" style="justify-content:space-between;align-items:center;gap:28px;padding-block:72px">
+<div style="flex:1 1 480px"><h2>Ready for a tuning?</h2><p class="muted" style="margin-top:12px;font-size:18px">Book online in two minutes, or call and talk to a technician.</p></div>
+<div class="row"><a class="btn primary" href="#book">Book online</a><span class="btn ghost" style="color:#fff;cursor:default;white-space:nowrap">Call (571) 555-0148</span></div>
+</section></div>
+<div class="keys" data-keys="80"></div>
+<footer>
+<div class="wrap">
+<div style="flex:1 1 260px"><p class="brand" style="color:#fff;font-size:18px;margin-bottom:8px">Smyrna Piano Service</p><p>Piano tuning &amp; repair for Washington DC, Maryland &amp; Northern Virginia</p></div>
+<div style="flex:1 1 180px"><a href="#services">Services &amp; pricing</a><a href="#about">About</a><a href="#care">Piano care guide</a><a href="#book">Book a tuning</a></div>
+<div style="flex:1 1 220px"><p><b>(571) 555-0148</b></p><p>book@smyrnapiano.com</p><p>Mon–Sat, 9am–6pm</p></div>
+</div>
+<div class="wrap demo">Sample website for a fictional business. Name, phone number, email and prices are placeholders. © 2026</div>
+</footer>
+
+<script>
+{
+const $ = (s) => document.querySelector(s);
+const esc = (v) => String(v).replace(/[&<>"']/g, (c) => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+
+const D = {
+  homeServices: [
+    ['Standard tuning','$165','Fine tuning of every string to A440 concert pitch, plus a quick check of keys, pedals and action.'],
+    ['Pitch raise','+$75','For pianos that haven’t been tuned in a while and have drifted well below pitch. Done before the fine tuning.'],
+    ['Minor repairs','From $45','Sticking or silent keys, squeaky pedals, buzzes and rattles, broken strings.'],
+    ['Regulation','From $350','Adjusting the action so the keys feel even and respond the way they should.'],
+    ['Voicing','From $150','Shaping the tone of the hammers when a piano sounds too harsh, bright or dull.'],
+    ['Pre-purchase inspection','$120','Buying a used piano? Get an honest assessment of its condition before you commit.']
+  ],
+  steps: [
+    ['Request a visit','Book online or call. Tell us about your piano and your availability.'],
+    ['Confirm a time','We confirm a date and an estimate within one business day.'],
+    ['Tuning at your home','A standard tuning usually takes about 60–90 minutes. A quiet room helps.'],
+    ['Stay in tune','Optional seasonal reminders so you never go too long between tunings.']
+  ],
+  areas: [['Washington, DC','All neighborhoods'],['Maryland','Montgomery County\nPrince George’s County'],['Northern Virginia','Fairfax County · Arlington\nAlexandria · Falls Church\nLoudoun · Prince William']],
+  faq: [
+    ['How often should my piano be tuned?','At least once a year for a home piano, and twice a year if it’s played often or used for teaching. Pianos used for performances or recording are often tuned before each event.'],
+    ['My piano hasn’t been tuned in years. Can it still be tuned?','Usually, yes. It may need a pitch raise first to bring it back up safely, and we’ll tell you upfront if anything needs attention.'],
+    ['Should I tune my piano right after moving it?','Give it two to four weeks to adjust to its new room’s temperature and humidity first, then schedule the tuning.'],
+    ['How do I pay?','Credit or debit card, Zelle, check or cash, at the end of the visit.'],
+    ['Do you charge a travel fee?','No travel fee within 25 miles of Fairfax. Beyond that, a flat $25 is added to the visit.']
+  ],
+  rows: [
+    ['Standard tuning','All strings fine-tuned to A440, unisons cleaned up, plus a check of keys, pedals and action. Small adjustments included.','$165','60–90 min'],
+    ['Pitch raise','A rough first pass for pianos well below pitch, so the fine tuning holds. Added to a standard tuning.','+$75','+30 min'],
+    ['Minor repairs','Sticking or silent keys, squeaky pedals, buzzes, loose parts, a broken string.','From $45','Varies'],
+    ['Regulation','Adjusts hundreds of small action parts so every key feels even and repeats well. Quoted after inspection.','From $350','Half day+'],
+    ['Voicing','Needling or filing hammers to even out tone that has turned harsh, bright or dull.','From $150','1–2 hrs'],
+    ['Pre-purchase inspection','Condition report on a used piano before you buy: pinblock, soundboard, action, likely costs ahead.','$120','45 min'],
+    ['Cleaning','Vacuuming and dusting inside the case and under the keys. Best paired with a tuning.','$60','30 min'],
+    ['Humidity control system','An in-piano system that keeps the soundboard stable through DMV summers and winters. Installed and set up.','Quoted','1–2 hrs']
+  ],
+  kinds: [['Uprights','Studio, console and full-size uprights — the most common pianos in homes and schools.'],['Spinets','Compact uprights from the mid-1900s. Some need extra care, and we’ll be honest about what’s worth fixing.'],['Grands','Baby grands through concert grands, for homes, churches and performance spaces.'],['Player pianos','Tuning and basic piano work. Player mechanisms are referred to a specialist.']],
+  policies: [['Travel','No travel fee within 25 miles of Fairfax. Beyond that, a flat $25 per visit.'],['Payment','Card, Zelle, check or cash, due at the end of the visit.'],['Rescheduling','Free with 24 hours’ notice. Same-day cancellations may be charged $40.'],['Schools & churches','Several pianos at one site? Ask about a multi-piano rate and yearly service plans.']],
+  values: [['On time','We arrive in the window we give you, and text if anything changes.'],['Price first','You get a price before any work beyond what you booked. No surprises on the bill.'],['Careful in your home','Shoe covers, drop cloths, and a clean space when we leave.'],['Straight answers','Plain explanations of what your piano needs — and what it doesn’t.']],
+  visit: [['Arrive','Quick hello and a look','We ask how the piano has been playing and note anything you’ve noticed.'],['10 min','Inspection','Keys, pedals, strings, pins and action. If something needs attention, you hear about it now.'],['60 min','Tuning','Every string, every unison. A pitch raise first if the piano is far below pitch.'],['10 min','Small fixes','Minor adjustments, like a sticky key or a squeaky pedal, done while we’re there.'],['Finish','Play-through and notes','You try it out. We leave notes and suggest when to book the next tuning.']],
+  tips: [
+    ['Keep humidity steady','Wood moves with moisture. Big swings crack soundboards, loosen tuning pins and make keys stick. Aim for a room that stays around 40–50% relative humidity all year.','A small hygrometer near the piano tells you where you stand.'],
+    ['Choose the right spot','Keep the piano away from heating vents, radiators, fireplaces and direct sun. An inside wall is better than an outside one, especially in older homes.','Even a few feet from a vent makes a difference.'],
+    ['Clean the keys gently','Wipe with a soft cloth barely dampened with water and a drop of mild soap. Wipe toward you, one key at a time, then dry right away.','Never spray cleaner directly on the keys.'],
+    ['Keep the inside clear','Drinks, plants and vases on top of a piano are a common cause of water damage. Pencils, coins and toys that fall inside cause buzzes.','Keep the lid closed when the piano isn’t being played.'],
+    ['Move it the right way','Pianos are heavy and top-heavy. Use movers who specialize in pianos, even for a move within the same house.','Wait 2–4 weeks after a move before tuning.'],
+    ['Play it','A piano that gets played regularly tends to show problems early, before they get worse. Silent pianos still need tuning — the weather doesn’t stop.','Once a year at minimum, even if no one plays.']
+  ],
+  signs: ['Notes sound sour or “wavy”','Keys stick or don’t come back up','A note doesn’t sound at all','Buzzing, rattling or clicking','Pedals squeak or stop working','It’s been over a year since the last tuning'],
+  svcs: [['tuning','Standard tuning','$165'],['raise','Tuning + pitch raise','$240'],['repair','Repair visit','From $45'],['inspect','Pre-purchase inspection','$120']],
+  times: ['Weekday mornings','Weekday afternoons','Weekday evenings','Saturday','Anytime']
+};
+
+// keyboards
+let kid = 0;
+const keyboard = (h) => {
+  const id = 'oct' + (kid++), bh = Math.round(h * 0.62);
+  let w = '', b = '';
+  for (let i = 0; i < 7; i++) w += `<rect x="${1 + 40 * i}" y="0" width="38" height="${h - 1}" fill="#fff"/>`;
+  for (const x of [27, 67, 147, 187, 227]) b += `<rect x="${x}" y="0" width="24" height="${bh}" fill="#141414"/>`;
+  return `<svg viewBox="0 0 1200 ${h}" preserveAspectRatio="none" style="display:block;width:100%;height:${h}px" aria-hidden="true"><defs><pattern id="${id}" width="280" height="${h}" patternUnits="userSpaceOnUse"><rect width="280" height="${h}" fill="#141414"/>${w}${b}</pattern></defs><rect width="1200" height="${h}" fill="url(#${id})"/><rect width="1200" height="5" fill="var(--accent)"/></svg>`;
+};
+document.querySelectorAll('[data-keys]').forEach((el) => {
+  const h = +el.dataset.keys;
+  el.innerHTML = keyboard(window.innerWidth < 600 ? Math.round(h * 0.6) : h);
+});
+
+// home
+$('#home-services').innerHTML = D.homeServices.map(([n, p, d]) => `<div class="card" style="display:flex;flex-direction:column;gap:10px"><div style="display:flex;justify-content:space-between;align-items:baseline;gap:12px;flex-wrap:wrap"><h3>${esc(n)}</h3><span class="price">${esc(p)}</span></div><p class="muted" style="font-size:16px">${esc(d)}</p></div>`).join('');
+$('#home-steps').innerHTML = D.steps.map(([t, d], i) => `<div><b>Step ${i + 1}</b><h3 style="margin-bottom:8px">${esc(t)}</h3><p class="muted" style="font-size:16px">${esc(d)}</p></div>`).join('');
+$('#home-areas').innerHTML = D.areas.map(([r, p]) => `<div><h3 style="font-size:18px;margin-bottom:8px">${esc(r)}</h3><p class="muted" style="font-size:16px;white-space:pre-line">${esc(p)}</p></div>`).join('');
+$('#home-faq').innerHTML = D.faq.map(([q, a]) => `<details><summary>${esc(q)}</summary><p>${esc(a)}</p></details>`).join('');
+
+// services
+$('#svc-rows').innerHTML = D.rows.map(([n, d, p, t]) => `<tr><th scope="row">${esc(n)}</th><td class="muted">${esc(d)}</td><td class="num-col price" style="font-size:16px">${esc(p)}</td><td class="num-col muted">${esc(t)}</td></tr>`).join('');
+const cards = (list) => list.map(([t, d]) => `<div class="card"><h3 style="margin-bottom:8px">${esc(t)}</h3><p class="muted" style="font-size:16px">${esc(d)}</p></div>`).join('');
+$('#svc-kinds').innerHTML = cards(D.kinds);
+$('#svc-policies').innerHTML = D.policies.map(([t, d]) => `<div><h3 style="font-size:19px;margin-bottom:8px">${esc(t)}</h3><p class="muted" style="font-size:16px">${esc(d)}</p></div>`).join('');
+
+// about
+$('#about-values').innerHTML = cards(D.values);
+$('#about-visit').innerHTML = D.visit.map(([tm, t, d]) => `<li style="display:flex;gap:24px;padding:20px 0;border-top:1px solid var(--line)"><span style="font-family:Archivo,sans-serif;font-weight:800;font-size:15px;color:var(--accent);min-width:72px">${esc(tm)}</span><div><p style="font-weight:600;margin-bottom:4px">${esc(t)}</p><p class="muted" style="font-size:16px">${esc(d)}</p></div></li>`).join('');
+const hs = [120, 110, 100, 92, 84, 76, 69, 62, 56, 50, 45, 40];
+$('#steps-svg').innerHTML = hs.map((h, i) => `<rect x="${i * 16}" y="${120 - h}" width="14" height="${h}" rx="2" fill="${i === 11 ? 'var(--accent)' : '#fff'}"/>`).join('');
+
+// care
+const best = ['Apr', 'May', 'Oct', 'Nov'], change = ['Mar', 'Jun', 'Sep', 'Dec'];
+const whites = ['Jan', 'Mar', 'May', 'Jun', 'Aug', 'Oct', 'Dec'];
+const blacks = { Feb: 1, Apr: 2, Jul: 4, Sep: 5, Nov: 6 };
+const kw = 100 / 7;
+$('#octave').innerHTML = `<div class="whites">${whites.map((m) => {
+  const b = best.includes(m), c = change.includes(m);
+  return `<div class="wk" style="background:${b ? 'var(--accent)' : c ? '#D9D9D2' : '#fff'};color:${b ? 'var(--accent-ink)' : '#141414'}">${m}</div>`;
+}).join('')}</div>` + Object.entries(blacks).map(([m, at]) => `<div class="bk" style="left:calc(${(at * kw - 4.5).toFixed(2)}% + 1px);background:${best.includes(m) ? 'var(--accent)' : change.includes(m) ? '#5E5F63' : '#141414'};color:${best.includes(m) ? 'var(--accent-ink)' : '#fff'}">${m}</div>`).join('');
+$('#care-tips').innerHTML = D.tips.map(([t, d, tip]) => `<div class="card" style="display:flex;flex-direction:column;gap:12px;padding:32px"><h3 style="font-size:22px">${esc(t)}</h3><p class="muted" style="font-size:16px">${esc(d)}</p><p style="font-size:15px;font-weight:600">${esc(tip)}</p></div>`).join('');
+$('#care-signs').innerHTML = D.signs.map((s) => `<li class="card"><svg width="20" height="20" viewBox="0 0 20 20" aria-hidden="true" style="flex:none;margin-top:2px"><circle cx="10" cy="10" r="9" fill="none" stroke="var(--accent)" stroke-width="2"/><path d="M6 10.5l2.5 2.5L14 7.5" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg><span>${esc(s)}</span></li>`).join('');
+
+// booking
+const st = { svc: 'tuning', times: ['Weekday mornings'] };
+const renderOpts = () => {
+  $('#opt-svc').innerHTML = D.svcs.map(([id, n, p]) => `<button type="button" class="opt" data-svc="${id}" aria-pressed="${st.svc === id}"><span style="font-weight:600">${esc(n)}</span><small>${esc(p)}</small></button>`).join('');
+  $('#opt-times').innerHTML = D.times.map((t) => `<button type="button" class="chip" data-time="${esc(t)}" aria-pressed="${st.times.includes(t)}">${esc(t)}</button>`).join('');
+  const s = D.svcs.find((x) => x[0] === st.svc);
+  $('#sel-name').textContent = s[1]; $('#sel-price').textContent = s[2];
+};
+renderOpts();
+$('#opt-svc').addEventListener('click', (e) => { const b = e.target.closest('[data-svc]'); if (!b) return; st.svc = b.dataset.svc; renderOpts(); $(`[data-svc="${st.svc}"]`).focus(); });
+$('#opt-times').addEventListener('click', (e) => {
+  const b = e.target.closest('[data-time]'); if (!b) return; const t = b.dataset.time;
+  st.times = st.times.includes(t) ? st.times.filter((x) => x !== t) : st.times.concat(t);
+  renderOpts(); document.querySelector(`[data-time="${CSS.escape(t)}"]`).focus();
+});
+$('#book-form').addEventListener('submit', (e) => {
+  e.preventDefault();
+  const name = $('#f-name'), phone = $('#f-phone'), email = $('#f-email'), zip = $('#f-zip');
+  [name, phone, email, zip].forEach((f) => f.removeAttribute('aria-invalid'));
+  let msg = '';
+  if (!name.value.trim()) { msg = 'Please add your name.'; name.setAttribute('aria-invalid', 'true'); }
+  else if (!phone.value.trim() && !email.value.trim()) { msg = 'Please add a phone number or email so we can reach you.'; phone.setAttribute('aria-invalid', 'true'); email.setAttribute('aria-invalid', 'true'); }
+  else if (email.value.trim() && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.value.trim())) { msg = 'That email address doesn’t look right.'; email.setAttribute('aria-invalid', 'true'); }
+  else if (zip.value.trim() && !/^\d{5}$/.test(zip.value.trim())) { msg = 'ZIP code should be 5 digits.'; zip.setAttribute('aria-invalid', 'true'); }
+  $('#f-err').textContent = msg;
+  if (msg) { document.querySelector('[aria-invalid=true]').focus(); return; }
+  const s = D.svcs.find((x) => x[0] === st.svc);
+  const first = name.value.trim().split(/\s+/)[0];
+  $('#thanks-title').textContent = `Thanks, ${first} — that's everything we need.`;
+  $('#thanks-text').textContent = `We'd reply within one business day to confirm a time for your ${s[1].toLowerCase()} (${s[2]}). Preferred times: ${st.times.length ? st.times.join(', ') : 'Anytime'}.`;
+  $('#book-form').hidden = true; $('#book-thanks').hidden = false; $('#thanks-title').focus();
+});
+$('#again').addEventListener('click', () => { $('#book-form').reset(); $('#f-err').textContent = ''; $('#book-thanks').hidden = true; $('#book-form').hidden = false; $('#f-name').focus(); });
+
+// routing
+const views = ['home', 'services', 'about', 'care', 'book'];
+const titles = { home: 'Smyrna Piano Service', services: 'Services & pricing · Smyrna Piano', about: 'About · Smyrna Piano', care: 'Piano care guide · Smyrna Piano', book: 'Book a tuning · Smyrna Piano' };
+const route = () => {
+  const v = views.includes(location.hash.slice(1)) ? location.hash.slice(1) : 'home';
+  views.forEach((x) => $('#v-' + x).classList.toggle('on', x === v));
+  document.querySelectorAll('nav a').forEach((a) => a.toggleAttribute('aria-current', a.getAttribute('href') === '#' + v && !a.classList.contains('btn')));
+  document.querySelectorAll('nav a[aria-current]').forEach((a) => a.setAttribute('aria-current', 'page'));
+  $('#cta').hidden = v === 'book';
+  document.title = titles[v];
+  window.scrollTo(0, 0);
+};
+window.addEventListener('hashchange', route);
+route();
+}
+</script>
+</body>
+</html>
